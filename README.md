@@ -10,12 +10,12 @@ Docker Compose to set up CiviCRM for the Canadian Chamber of Commerce in Vietnam
 1. Install docker and docker-compose on your machine.
 2. Make folders on your docker host for the data volume mappings
 
-    mkdir /home/ccvAdmin/wwwData
-	mkdir /home/ccvAdmin/mysqlData
+      mkdir /home/ccvAdmin/wwwData
+	  mkdir /home/ccvAdmin/mysqlData
 
 3. Clone this repository
 
-    git clone https://github.com/CanChamVietnam/civicrm-docker
+      git clone https://github.com/CanChamVietnam/civicrm-docker
 
 4. docker-compose up -d
 	
