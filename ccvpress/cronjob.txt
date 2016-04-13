@@ -1,0 +1,1 @@
+*/15 * * * * /usr/local/bin/wp --user=ccvAdmin --url=http://ccvcrm.cloudapp.net --path=/var/www/html civicrm api job.execute auth=0
