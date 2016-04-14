@@ -19,13 +19,15 @@ Docker Compose to set up CiviCRM on Wordpress 4.5 for the Canadian Chamber of Co
 	git clone https://github.com/CanChamVietnam/civicrm-docker
 ```
 + Change the SITE, DBPASS and SITEPASS variables in the ccvpress/config_wordpress.sh file
-+ Change the MYSQL_ROOT_PASSWORD in the docker-compose.yml file
++ Change the MYSQL_ROOT_PASSWORD in the docker-compose.yml file.  Should be the same as DBPASS
 + Bring the system up
 ```
 	docker-compose up -d
 ```
-+ Open the site in a browser, log in with the ccvAdmin account, and go to the plugins area in wordpress
-+ Activate the CiviCRM plugin, refresh the page.
-+ Complete the CiviCRM install, refresh the page.
++ If this is a fresh install, wait a few minutes for supervisor to finish running the onetime_config_wordpress process
++ Open the site in a browser, log into the site admin area with the ccvAdmin account and the SITEPASS you set in ccvpress/config_wordpress.sh
++ Go to the plugins area
++ Activate the CiviCRM plugin
++ Complete the CiviCRM install, let the page refresh.
 + Wait 5 minutes after the completion of the CiviCRM install for the first cron job to run, and the error to go away.
 + Begin configuring CiviCRM.
