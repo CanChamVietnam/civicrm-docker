@@ -24,7 +24,7 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 ADD cronjob.txt /config/cronjob.txt
 
 #Adds the cron job that CiviCRM expects to the www-data users crontab
-RUN crontab -u www-data /config/cronjob.txt
+RUN crontab -u root /config/cronjob.txt
 
 #Installing supervisor to allow for running of apache, cron and rsyslog
 ADD ./etc-supervisord.conf /etc/supervisord.conf
@@ -38,10 +38,7 @@ RUN mkdir -p /var/www2/html && \
     cp -R /usr/src/wordpress/* /var/www2/html && \
     chown -R www-data:www-data /var/www2/html
 	
-#Running wp-cli commands to set up the DB and install Wordpress.  Looks like maybe we need to run these commands after the containers start so mysql can be accessed.
-#RUN sudo -u www-data -- wp core config --dbname=wordpress --dbuser=root --dbpass=insecurepass --dbhost=mysql --path=/var/www2/html --skip-check && \
-#   sudo -u www-data -- wp db create --path=/var/www2/html && \
-#   sudo -u www-data -- wp core install --url=http://10.10.10.60 --title=ccv --admin_user=ccvAdmin --admin_password=insecurepass --admin_email=info@canchamvietnam.org --path=/var/www2/html
+#Adding a bash script to set up the DB and install Wordpress.  To be run by supervisor once when the container starts.  If the config is already done, nothing will change.
 ADD config_wordpress.sh /config/config_wordpress.sh
 RUN chmod +x /config/config_wordpress.sh
 
