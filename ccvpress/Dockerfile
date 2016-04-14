@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
 	  wget \
 	  unzip \
 	  cron \
+	  sudo \
 	  rsyslog
 
 #Installs the mysql client for php.  CiviCRM still uses mysql - not mysqli.  CiviCRM won't allow install onto the wordpress:4.4.2 image without this.
@@ -17,11 +18,29 @@ RUN docker-php-ext-install mysql
 #Installs the wordpress cli tool.  CiviCRM expects a cron job to run that triggers its scheduled jobs and it's easier to run this with the wordpress cli tool - wp-cli.
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 
-#Starts the rsyslog service so we can watch /var/log/syslog for cron job runs, and starts the cron service so jobs actually run.  Updates rc.d so the services are started with the container.
-RUN service rsyslog start && update-rc.d rsyslog defaults && service cron start && update-rc.d cron defaults
-
 #Copies the cron job that CiviCRM expects from the host to the container in a text file
 ADD cronjob.txt /config/cronjob.txt
 
 #Adds the cron job that CiviCRM expects to the www-data users crontab
 RUN crontab -u www-data /config/cronjob.txt
+
+#Installing supervisor to allow for running of apache, cron and rsyslog
+RUN apt-get install -y supervisor
+ADD ./etc-supervisord.conf /etc/supervisord.conf
+ADD ./etc-supervisor-conf.d-supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN mkdir -p /var/log/supervisor/
+
+#Wordpress source is in /usr/src on the official wordpress image.  Moving it to /var/www/html and giving ownership of those files to the www-data user.
+RUN cp -R /usr/src/wordpress/* /var/www/html
+RUN chown -R www-data:www-data /var/www/html
+
+#Installing mysql client to allow for setting up the DB via wp-cli
+RUN apt-get install -y mysql-client
+
+#Running wp-cli commands to set up the DB and install Wordpress
+#RUN sudo -u www-data -- wp core config --dbname=wordpress --dbuser=root --dbpass=insecurepass --dbhost=mysql
+#RUN sudo -u www-data -- wp db create
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord"]
