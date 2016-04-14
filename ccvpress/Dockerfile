@@ -1,4 +1,4 @@
-FROM wordpress:4.4.2
+FROM wordpress:4.5
 
 #Sets the timezone
 RUN echo "Asia/Ho_Chi_Minh" > /etc/timezone && \
@@ -23,7 +23,7 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 #Copies the cron job that CiviCRM expects from the host to the container in a text file
 ADD cronjob.txt /config/cronjob.txt
 
-#Adds the cron job that CiviCRM expects to the www-data users crontab
+#Adds the cron job that CiviCRM expects to the root users crontab
 RUN crontab -u root /config/cronjob.txt
 
 #Installing supervisor to allow for running of apache, cron and rsyslog
