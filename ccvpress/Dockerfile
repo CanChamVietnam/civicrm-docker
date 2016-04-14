@@ -31,13 +31,7 @@ ADD ./etc-supervisord.conf /etc/supervisord.conf
 ADD ./etc-supervisor-conf.d-supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN mkdir -p /var/log/supervisor/
 
-VOLUME /var/www2/html
-
-#Using /var/www2/html as the Apache DocumentRoot as the wordpress image clobbers /var/www/html with its VOLUME call 
-ADD apache2.conf /etc/apache2/apache2.conf
-ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
-
-#Bash script to set up the DB and install Wordpress.  To be run by supervisor once when the container starts.  Will only make changes if /var/www2/html is empty.
+#Bash script to set up the DB and install Wordpress.  To be run by supervisor once when the container starts.  Will only make changes if /var/www/html is empty.
 ADD config_wordpress.sh /config/config_wordpress.sh
 RUN chmod +x /config/config_wordpress.sh
 
