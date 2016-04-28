@@ -29,6 +29,11 @@ RUN crontab -u root /config/cronjob.txt
 #Installing supervisor to allow for running of apache, cron and rsyslog
 ADD ./etc-supervisord.conf /etc/supervisord.conf
 ADD ./etc-supervisor-conf.d-supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+#Installing topbeat
+RUN cd /usr/src && curl -L -O https://download.elastic.co/beats/topbeat/topbeat_1.2.2_amd64.deb && dpkg -i topbeat_1.2.2_amd64.deb
+ADD ./topbeat.yml /etc/topbeat/topbeat.yml
+
 RUN mkdir -p /var/log/supervisor/
 
 #Bash script to set up the DB and install Wordpress.  To be run by supervisor once when the container starts.  Will only make changes if /var/www/html is empty.

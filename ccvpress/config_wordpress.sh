@@ -2,7 +2,7 @@
 DIR="/var/www/html"
 DBPASS="insecurepass"
 SITEPASS="insecurepass"
-SITE="http://10.10.10.56"
+SITE="http://10.10.10.52"
 
 if [ "$(ls -A $DIR)" ] ; then
     echo "Looks like $DIR is not empty, not installing"
