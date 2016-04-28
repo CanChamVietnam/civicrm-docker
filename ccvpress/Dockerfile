@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
 	  sudo \
 	  rsyslog \
 	  mysql-client \
+      libpcap0.8 \
 	  supervisor
 
 #Installs the mysql client for php.  CiviCRM still uses mysql - not mysqli.  CiviCRM won't allow install onto the wordpress:4.4.2 image without this.
@@ -33,6 +34,10 @@ ADD ./etc-supervisor-conf.d-supervisord.conf /etc/supervisor/conf.d/supervisord.
 #Installing topbeat
 RUN cd /usr/src && curl -L -O https://download.elastic.co/beats/topbeat/topbeat_1.2.2_amd64.deb && dpkg -i topbeat_1.2.2_amd64.deb
 ADD ./topbeat.yml /etc/topbeat/topbeat.yml
+
+#Installing topbeat
+RUN cd /usr/src && curl -L -O https://download.elastic.co/beats/packetbeat/packetbeat_1.2.2_amd64.deb && dpkg -i packetbeat_1.2.2_amd64.deb
+ADD ./packetbeat.yml /etc/packetbeat/packetbeat.yml
 
 RUN mkdir -p /var/log/supervisor/
 
